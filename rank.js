@@ -82,9 +82,6 @@ const marks={
     social: 100,
 }
 }
-
-let rank =1; 
-
 const getTotal = (studentDetail, marks) => 
   values(marks[studentDetail.rollNo]).reduce((acc, c)=> acc + c);
 
@@ -94,22 +91,28 @@ const passOrFail = (studentDetail, marks) =>
       : 'F'
 
 const getRank = (studentRecord) =>
-studentRecord.map((data, index, array) =>
-  data.passOrFail === 'P'
-  ? (index === 0 || data.total === array[index-1]['total'] 
-    ? {...data, Rank: rank}
-    : ((rank = index+1), ({...data, Rank: rank})))
-  : {...data, Rank: '-'});
+studentRecord.map((data, index, array) =>({
+  ...data, 
+  Rank: data.passOrFail ==='P' 
+  ? array.filter((item) => item.total > data.total && item.passOrFail !== 'F').length+1 
+  : '-',
+})
+);
 
 const getCount = (studentRecord) => (
-  [...studentRecord, {count:{Pass: rank, Fail: studentRecord.length - rank}}]
+  [...studentRecord, 
+    {count: studentRecord.reduce((acc, c)=>
+      c.passOrFail === 'P' ? {...acc, pass: ++acc.pass} : {...acc, fail: ++acc.fail}
+      , {pass:0, fail:0})}]
     );
 
 
 const processMarkSheets = (marSheets, marks)=>{
   const studentRecord = marSheets.map(data =>({
-     ...data, total: getTotal(data,marks), passOrFail: passOrFail(data, marks)
-    })).sort((a, b)=> b.passOrFail.localeCompare(a.passOrFail) || b.total - a.total);
+     ...data, 
+     total: getTotal(data,marks), 
+     passOrFail: passOrFail(data, marks)
+    }))
     return getCount(getRank(studentRecord));
   };
 
