@@ -116,4 +116,4 @@ const processMarkSheets = (marSheets, marks)=>{
     return getCount(getRank(studentRecord));
   };
 
-console.table(processMarkSheets(markSheets, marks));
+module.exports = processMarkSheets;

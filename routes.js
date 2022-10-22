@@ -69,6 +69,7 @@ const routes = [
 // const checkRoute = (distance, stop) => contains(distance, stop);
 
 const checkRoute = (distance, stop) =>
+  
   contains(values(distance), values(stop)) ||
   contains(values(distance), (values(stop)).reverse());
 
