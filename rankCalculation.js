@@ -2,11 +2,12 @@ const { map } = require('@laufire/utils/collection');
 const { index } = require('@laufire/utils/crunch');
 const csv = require('csv-parser');
 const fs = require('fs');
-const markSheets = [];
+const input = [];
 
-const groupMarkSheets = (markSheets) => index(markSheets, ['class', 'section']);
+const indexData = (data) => index(data, ['class', 'section']);
 
-const processMarkSheets = (markSheets) => {
+const processIndexedData = (data) => {
+
   const getTotal = ({ tamil, english, maths, science, social }) =>
     [tamil, english, maths, science, social].reduce((acc, c) => acc + parseInt(c), 0);
 
@@ -33,8 +34,8 @@ const processMarkSheets = (markSheets) => {
     }]
   );
 
-  const processMarkSheet = (markSheets) => {
-    const studentRecord = markSheets.map(data => ({
+  const processData = (data) => {
+    const studentRecord = data.map(data => ({
       ...data,
       total: getTotal(data),
       passOrFail: passOrFail(data)
@@ -42,23 +43,27 @@ const processMarkSheets = (markSheets) => {
     return getCount(getRank(studentRecord));
   };
 
-  return map(markSheets, processMarkSheet);
+  const processSection = (data ) => map(data, processData);
+
+  const processedClass = map(data, processSection);
+
+  return processedClass;
 };
 
-const displayMarkSheets = (markSheets) => console.log(JSON.stringify(markSheets));
+const displayData = (data) => console.log(JSON.stringify(data));
 
 
-const groupInput = () => {
-  const groupedMarkSheets = groupMarkSheets(markSheets);
-  const processedMarkSheets = map(groupedMarkSheets, processMarkSheets);
-  displayMarkSheets(processedMarkSheets);
+const indexInput = () => {
+  const indexedData = indexData(input);
+  const processedData = processIndexedData(indexedData);
+  displayData(processedData);
 }
 
 const getInputObj = () => fs.createReadStream('markSheets.csv')
   .pipe(csv())
-  .on('data', (data) => markSheets.push(data))
+  .on('data', (data) => input.push(data))
   .on('end', () => {
-    groupInput();
+    indexInput();
   });
 
 const main = () => {
