@@ -32,19 +32,21 @@ const doOperation = (operatorIndex) => (element, index, array) =>
 const removeOperands = (operatorIndex) => 
   (element, index) => index !== operatorIndex - 1 && index !== operatorIndex + 1;
 
-const evaluateOperations = (input) => {
+const evaluateExpression = (input) => {
   const operatorIndex = getOperatorIndex(input, Priorities[priority]);
   const result = input.map(doOperation(operatorIndex))
     .filter(removeOperands(operatorIndex));
-    
-  return result.length > 1 ? evaluateOperations(result) : result;
+
+  return evaluate(result);
 };
 
-const displayResult =(result)=> console.log(result[0]);
+const evaluate = (input)=> input.length > 1 ? evaluateExpression(input) : input[0];
+
+const display =(result)=> console.log(result);
 
 const main = (input) =>{
-  const result = evaluateOperations(input);
-   displayResult(result);
+  const result = evaluate(input);
+   display(result);
 };
 
 main(input);
