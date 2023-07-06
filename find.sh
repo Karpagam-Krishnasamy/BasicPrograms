@@ -1,5 +1,5 @@
 for topdir in ./*/;
 do
-    [ ! "$(find "$topdir" -type d -name .git)" ] &&
+    [ ! "$(find "$topdir" -name .git)" ] &&
     echo "$topdir"
 done
