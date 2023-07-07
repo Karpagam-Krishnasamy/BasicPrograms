@@ -1,1 +1,10 @@
-find -maxdepth 1 -type d -exec test ! -d "{}/.git" \; -print
+filterNonGitFolders()
+{
+  for topdir in ./*/;
+do
+    [ ! "$(find "$topdir" -name .git)" ] &&
+    echo "$topdir"
+done
+}
+
+filterNonGitFolders
