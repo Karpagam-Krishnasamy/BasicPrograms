@@ -4,10 +4,12 @@ echo $sum
 }
 
 getTotal(){
-while read split
+while read data
 do
-  addMarks $split
-done < marksheets.tsv
+  IFS=$","
+  marks=$data
+  addMarks $marks
+done < marksheets.csv
 }
 
 getTotal
