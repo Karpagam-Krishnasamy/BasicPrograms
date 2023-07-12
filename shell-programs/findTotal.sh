@@ -1,14 +1,13 @@
 addMarks(){
 sum=$(($3 + $4 + $5))
-echo $sum
 }
 
 getTotal(){
 while read data
 do
   IFS=$","
-  marks=$data
-  addMarks $marks
+  addMarks $data
+  echo $sum
 done < marksheets.csv
 }
 
